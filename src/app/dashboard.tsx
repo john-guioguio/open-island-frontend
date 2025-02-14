@@ -153,7 +153,7 @@ export default function CustomPaginationActionsTable({ rows,
     try {
       // Make the request with Axios, fetching the image as a Blob
       const allCookies = Cookies.get();
-      const response = await axios.get("http://localhost:8000/api/download-image/" + imageUrl + "/" + filename, {
+      const response = await axios.get("https://api.openisland.ph/download-image/" + imageUrl + "/" + filename, {
         headers: {
           'X-XSRF-TOKEN': allCookies['XSRF-TOKEN'],
         }, withCredentials: true,
