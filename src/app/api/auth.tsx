@@ -65,6 +65,7 @@ export const loginUser = async (email: string, password: string): Promise<LoginR
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'X-XSRF-TOKEN': allCookies['XSRF-TOKEN'],
+          'CSRF-TOKEN': allCookies['XSRF-TOKEN'],
         },
         withCredentials: true, // Maintain session using cookies
       }
@@ -127,6 +128,7 @@ export const logout = async ({ setUserData }: { setUserData: (setUserData: UserD
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'X-XSRF-TOKEN': allCookies['XSRF-TOKEN'],
+        'CSRF-TOKEN': allCookies['XSRF-TOKEN'],
       }, withCredentials: true
     });
 
