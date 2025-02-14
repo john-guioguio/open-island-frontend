@@ -20,8 +20,13 @@ const ADD = () => {
     virtual_tour: [],
   });
   const [destination, setDestination] = useState<DataItem[]>([]);
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id"); 
+  const [params, setParams] = useState<URLSearchParams | null>(null);
+  useEffect(() => {
+    // This runs only in the client
+    const searchParams = new URLSearchParams(window.location.search);
+    setParams(searchParams);
+  }, []);
+  const id = params?.get("id");
   const [userData, setUserData] = useState<UserData | null>(null);
 
 
