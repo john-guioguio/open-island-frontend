@@ -37,7 +37,7 @@ interface BootstrapDialogProps extends DialogProps {
     isMobile?: boolean;
     isTab?: boolean;
 }
-const BootstrapDialog = styled(({ isMobile, isTab, ...props }: BootstrapDialogProps) => (
+const BootstrapDialog = styled(({  ...props }: BootstrapDialogProps) => (
     <Dialog {...props} />
 ))(({ theme, isMobile, isTab }) => ({
     "& .MuiDialogContent-root": {
@@ -64,6 +64,9 @@ export default function Login({ setPageTab, prev_pageTab, setResultMSG, setOpen,
     };
     const handleClose = () => {
         openExternalPage({ val: '/cms', targ: '_self' });
+        if(prev_pageTab){
+
+        }
     };
 
 
@@ -108,8 +111,7 @@ export default function Login({ setPageTab, prev_pageTab, setResultMSG, setOpen,
 
             // setPageTab('Dashboard');
             try {
-                let response
-                response = await loginUser(username, password);
+                const response = await loginUser(username, password);
                 if (response.user) {
                     setUser(response.user as UserData);
                     setResultMSG('Success!');
@@ -121,6 +123,7 @@ export default function Login({ setPageTab, prev_pageTab, setResultMSG, setOpen,
                 }
             } catch (err) {
                 setResultMSG('Server error, please try again.');
+                console.error(err);
                 setOpen(true);
             }
         };

@@ -1,10 +1,10 @@
 'use client';
-import { Alert, Box, Fade, Snackbar, useMediaQuery } from "@mui/material";
+import { Alert, Box, Fade, Snackbar } from "@mui/material";
 import ContentManagerSystem from "../../cms";
 import { useEffect, useState } from "react";
 import { TransitionProps } from '@mui/material/transitions';
 import { getCsrfToken, getDestination} from "../../api/auth";
-import type { UserData, AlertSeverity, DataItem } from "../../components/type";
+import type { UserData, DataItem } from "../../components/type";
 
 import Cookies from 'js-cookie';
 
@@ -21,13 +21,11 @@ const ADD = () => {
   });
   const [destination, setDestination] = useState<DataItem[]>([]);
   const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
-  const [resultMSG, setResultMSG] = useState<string>('');
+  const id = params.get("id"); 
   const [userData, setUserData] = useState<UserData | null>(null);
 
 
-  // const [destination, setDestination] = useState<DataItem[]>([]);
-  const [alertServerity, setAlertServerity] = useState<AlertSeverity>('warning');
+  // const [destination, setDestination] = useState<DataItem[]>([]); 
   const [stateTrans] = useState<{
     open: boolean;
     Transition: React.ComponentType<TransitionProps & { children: React.ReactElement }>;
@@ -35,9 +33,7 @@ const ADD = () => {
     open: false,
     Transition: Fade,  // Ensure `Fade` is a valid transition component
   });
-
-  const isTab = useMediaQuery("(max-width:1380px)");
-  const isMobile = useMediaQuery("(max-width:820px)");
+ 
   const [open, setOpen] = useState<boolean>(false);
 
   const openExternalPage = ({ val, targ }: { val: string, targ: '_blank' | '_self' }) => {
@@ -46,10 +42,7 @@ const ADD = () => {
   const handleClose = () => {
     openExternalPage({ val: '/', targ: '_self' });
     setOpen(false);
-  };
-  const onClickLogo = () => {
-    location.reload();
-  }
+  }; 
 
   const fetchData = async () => {
     await getDestination({ setDestination });
@@ -68,7 +61,7 @@ const ADD = () => {
       virtual_tour: foundItem?.virtual_tour || [],
     });
     console.log(foundItem);
-  }, [destination]); // This will run when userData changes 
+  }, [destination,id]); // This will run when userData changes 
   useEffect(() => {
     // Log previous pageTab for debugging 
 
@@ -95,12 +88,10 @@ const ADD = () => {
       TransitionComponent={stateTrans.Transition}
     >
       <Alert
-        onClose={handleClose}
-        severity={alertServerity}
+        onClose={handleClose} 
         variant="filled"
         sx={{ width: '100%' }}
-      >
-        {resultMSG}
+      > 
       </Alert>
     </Snackbar>
       <Box sx={{

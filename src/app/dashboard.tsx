@@ -31,7 +31,7 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import { Delete } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
-import type { AlertSeverity, DataItem } from './components/type';
+import type { DataItem } from './components/type';
 import { TransitionProps } from '@mui/material/transitions';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import DeleteDialog from './components/DeleteDialog';
@@ -65,10 +65,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   const handleLastPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
-
-  const openExternalPage = ({ val, targ }: { val: string, targ: '_blank' | '_self' }) => {
-    window.open(val, targ); // Open in new tab
-  };
+ 
   return (
     <Box sx={{ flexShrink: 0, ml: 2.5, }}>
       <IconButton onClick={handleFirstPageButtonClick} disabled={page === 0} aria-label="first page">
@@ -96,10 +93,8 @@ export default function CustomPaginationActionsTable({ rows,
   const [tagFilter, setTagFilter] = React.useState('');
   const [open, setOpen] = React.useState<boolean>(false);
 
-
-  const [resultMSG, setResultMSG] = React.useState<string>('');
-  const [selectedDeleteID, setSelectedDeleteID] = React.useState<string>('');
-  const [alertServerity, setAlertServerity] = React.useState<AlertSeverity>('warning');
+ 
+  const [selectedDeleteID, setSelectedDeleteID] = React.useState<string>(''); 
   const [stateTrans] = React.useState<{
     open: boolean;
     Transition: React.ComponentType<TransitionProps & { children: React.ReactElement }>;
@@ -253,7 +248,7 @@ export default function CustomPaginationActionsTable({ rows,
                 <TableCell style={{ width: 220 }} align="right">
                   <Grid2 container spacing={2}>
                     <Grid2 size={6}>
-                      <Button variant='outlined' sx={{ mx: 1, minWidth: 100 }} color="error" startIcon={<Delete />} onClick={(e) => { setSelectedDeleteID(row.id); handleClickOpen() }}>Delete</Button>
+                      <Button variant='outlined' sx={{ mx: 1, minWidth: 100 }} color="error" startIcon={<Delete />} onClick={() => { setSelectedDeleteID(row.id); handleClickOpen() }}>Delete</Button>
                     </Grid2>
                     <Grid2 size={6}>
                       <Button variant='outlined' sx={{ mx: 1, minWidth: 100 }} startIcon={<EditIcon />} onClick={() => { setSelectedItem(row); setPageTab('CMS'); openExternalPage({ val: "/island/edit?id=" + row.id, targ: '_self' }) }}>Edit</Button>
@@ -297,12 +292,10 @@ export default function CustomPaginationActionsTable({ rows,
         TransitionComponent={stateTrans.Transition}
       >
         <Alert
-          onClose={handleClose}
-          severity={alertServerity}
+          onClose={handleClose} 
           variant="filled"
           sx={{ width: '100%' }}
-        >
-          {resultMSG}
+        > 
         </Alert>
       </Snackbar>
     </Box >

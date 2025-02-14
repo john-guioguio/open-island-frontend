@@ -10,7 +10,7 @@ import type { TabType, UserData, AlertSeverity, DataItem } from "../components/t
 // import  {  rows } from "@/app/types";
 import Cookies from 'js-cookie';
 import axios from "@/lib/axiosClient";
-const dashboard_CMS = () => {
+function Dashboard_CMS () {
   const [prev_pageTab, setPageTab] = useState<TabType>('Login');
   const [resultMSG, setResultMSG] = useState<string>('');
   const [isLoad, setLoad] = useState<boolean>(false);
@@ -52,7 +52,11 @@ const dashboard_CMS = () => {
   useEffect(() => {
     // Log previous pageTab for debugging
     // console.log(pageTab);
+    if(selectedItem){
 
+    }else if(prev_pageTab){
+      
+    } 
     fetchData();
     const storedUserData = localStorage.getItem('userData');
     const allCookies = Cookies.get();
@@ -68,7 +72,7 @@ const dashboard_CMS = () => {
       openExternalPage({ val: '/login', targ: '_self' });
       getCsrfToken({ setUserData });
     }
-  }, [userData]); // This will run when userData changes
+  }, [userData,prev_pageTab,selectedItem]); // This will run when userData changes
 
   const fetchData = async () => {
     await getDestination({ setDestination });
@@ -154,4 +158,4 @@ const dashboard_CMS = () => {
   );
 };
 
-export default dashboard_CMS; 
+export default Dashboard_CMS; 

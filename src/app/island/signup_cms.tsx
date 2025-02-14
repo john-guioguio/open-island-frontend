@@ -34,8 +34,7 @@ const LoginCMS = () => {
   });
 
   const isTab = useMediaQuery("(max-width:1380px)");
-  const isMobile = useMediaQuery("(max-width:820px)");
-  const [open, setOpen] = useState<boolean>(false);
+  const isMobile = useMediaQuery("(max-width:820px)"); 
 
   const openExternalPage = ({ val, targ }: { val: string, targ: '_blank' | '_self' }) => {
     window.open(val, targ); // Open in new tab
@@ -116,7 +115,7 @@ const LoginCMS = () => {
           </Grid2>
         </Grid2>
       </Box>
-      <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}
+      <Snackbar open={false} autoHideDuration={2000} onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
 
         TransitionComponent={stateTrans.Transition}
@@ -148,20 +147,5 @@ const LoginCMS = () => {
       </Box>
     </Box>
   );
-};
-type DataItem = {
-  destinationID: string;
-  destinationName: string;
-  description: string;
-  categories: string[];
-  tags: string[];
-  address: Location;
-  thumbnail: File | null;
-  virtualTour: File | null;
-};
-type Location = {
-  name: string;
-  lat: number;
-  lng: number;
-}
+};  
 export default LoginCMS; 

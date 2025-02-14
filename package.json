@@ -1,9 +1,10 @@
 {
+  "packageManager": "npm@9.8.1",
   "name": "open-island-frontend",
   "version": "0.1.0",
   "private": true,
-  "scripts": { 
-    "dev": " next dev",
+  "scripts": {
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

@@ -7,6 +7,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { AlertSeverity, DataItem, VirtualTour_OBJ, categoriesOptions, tagsOptions } from "./components/type";
 import axios from "@/lib/axiosClient";
 import { TransitionProps } from "@mui/material/transitions";
+import Image from "next/image";
 const acceptFormats: Accept = {
   "image/jpeg": [],
   "image/png": [],
@@ -16,7 +17,7 @@ const CustomVirtualTour = ({ fileImage, titleHostpot, setTitleHostpot, key }: { 
   return (
     <Grid2 container key={key}>
       <Grid2 size={4}>
-        <img
+        <Image
           src={fileImage}
           alt={fileImage}
           style={{ maxWidth: "100%", minHeight: 300, objectFit: "cover" }}
@@ -360,7 +361,7 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
             {previewThumbnail && (
               <Box sx={{ mt: 2, textAlign: "center" }}>
                 <Typography variant="body2">Preview of Thumbnail</Typography>
-                <img
+                <Image
                   src={previewThumbnail}
                   alt={previewThumbnail}
                   style={{ maxWidth: "100%", minHeight: 300, objectFit: "cover" }}

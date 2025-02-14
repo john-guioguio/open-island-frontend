@@ -17,8 +17,11 @@ export default function RootLayout({
 }) {
 
   const [userData, setUserData] = useState<UserData | null>(null);
-  const onClickLogo = () => {
+  const onClickLogo = () => { 
     location.reload();
+    if(userData){
+      
+    }
   }
   const isTab = useMediaQuery("(max-width:1380px)");
   const isMobile = useMediaQuery("(max-width:820px)");
@@ -32,7 +35,7 @@ export default function RootLayout({
       if (!storedUser || !xsrfToken) {
         console.log("User not logged in, fetching CSRF token...");
 
-        await getCsrfToken({ setUserData }); // ✅ CSRF token first
+        await getCsrfToken({setUserData}); // ✅ CSRF token first
         // await getUserLogin({ setUserData }); // ✅ Then get user login data
 
         const updatedUser = localStorage.getItem("userData");
@@ -46,10 +49,7 @@ export default function RootLayout({
     };
 
     checkAuth();
-  }, []);  // ✅ Run only once after mount
-  const openExternalPage = ({ val, targ }: { val: string, targ: '_blank' | '_self' }) => {
-    window.open(val, targ); // Open in new tab
-  };
+  }, []);  // ✅ Run only once after mount 
   return (
     <html lang="en">
       <body>

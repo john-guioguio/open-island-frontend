@@ -46,6 +46,7 @@ export const getUserLogin = async ({ setUserData }: { setUserData: (setUserData:
 
     localStorage.setItem('userData', JSON.stringify(response.data as UserData | null));
   } catch (error) {
+    console.error(error);
     setUserData(null); // Clear user data if login fails
   }
 };
@@ -92,7 +93,7 @@ export const getDestination = async ({ setDestination }: { setDestination: (dest
       tags: [],
       address: "",
       thumbnail: '',
-      virtual_tour: '',
+      virtual_tour: [],
     }]);
   }
 };
@@ -121,7 +122,7 @@ export const logout = async ({ setUserData }: { setUserData: (setUserData: UserD
   try {
     const allCookies = Cookies.get();
     // Send the logout request to the backend
-    const response = await axiosClient.post('/api/logout', {}, {
+   await axiosClient.post('/api/logout', {}, {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
