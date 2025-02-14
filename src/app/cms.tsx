@@ -1,14 +1,12 @@
 
 
 import React, { useEffect, useState } from "react";
-import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Chip, OutlinedInput, Box, Typography, SelectChangeEvent, Grid2, Snackbar, Alert, Fade, LinearProgress, ListItemButton, ListItem, List } from "@mui/material";
+import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Chip, OutlinedInput, Box, Typography, SelectChangeEvent, Grid2, Snackbar, Alert, Fade, LinearProgress,  List } from "@mui/material";
 import { useDropzone, Accept } from "react-dropzone"; // Import react-dropzone
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { AlertSeverity, DataItem, VirtualTour_OBJ, categoriesOptions, tagsOptions } from "./components/type";
 import axios from "@/lib/axiosClient";
 import { TransitionProps } from "@mui/material/transitions";
-import { title } from "process";
-import path from "path";
 const acceptFormats: Accept = {
   "image/jpeg": [],
   "image/png": [],

@@ -9,7 +9,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
 import { Box, Checkbox, FormControlLabel, Grid2, Link, TextField, useMediaQuery } from '@mui/material';
 import { Fragment, useEffect, useState, ChangeEvent } from 'react';
-import { registerUser, loginUser, getCsrfToken } from '../api/auth';
+import {  loginUser } from '../api/auth';
 
 type AlertSeverity = "error" | "warning" | "info" | "success"; // ✅ Define the type
 type TabType = "SignUp" | "Login" | "Dashboard" | "CMS" | "Destination" | "ForgotPassword"; // ✅ Define the type

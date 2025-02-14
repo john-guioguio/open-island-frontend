@@ -24,7 +24,7 @@ const dashboard_CMS = () => {
     tags: [],
     address: "",
     thumbnail: '',
-    virtual_tour: '',
+    virtual_tour:[],
   });
   const [alertServerity, setAlertServerity] = useState<AlertSeverity>('warning');
   const [stateTrans] = useState<{

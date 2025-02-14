@@ -1,5 +1,5 @@
 "use client";
-import { Alert, Box, Button, Fade, Grid2, Snackbar, Typography, useMediaQuery } from "@mui/material";
+import { Alert, Box, Button, Fade, Grid2, Snackbar,  useMediaQuery } from "@mui/material";
 import landingPageIMG from "../../../Images/landingpageBG.png"; // Import your background image
 import LogoImg from "../../../Images/logo.png"; // Import your background image
 import SignUp_CMS from "../signup/page";
@@ -22,8 +22,8 @@ type UserData = {
 };
 
 const LoginCMS = () => {
-  const [resultMSG, setResultMSG] = useState<string>('');
-  const [alertServerity, setAlertServerity] = useState<AlertSeverity>('warning');
+  const [resultMSG] = useState<string>('');
+  const [alertServerity] = useState<AlertSeverity>('warning');
   const [userData, setUserData] = useState<UserData | null>(null);
   const [stateTrans] = useState<{
     open: boolean;

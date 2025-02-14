@@ -1,9 +1,9 @@
 'use client';
-import { Alert, Box, Button, Fade, Grid2, Snackbar, Typography, useMediaQuery } from "@mui/material"; 
+import { Alert, Box, Fade, Snackbar, Typography, useMediaQuery } from "@mui/material"; 
 import ContentManagerSystem from "../../cms";
 import { useEffect, useState } from "react";
 import { TransitionProps } from '@mui/material/transitions'; 
-import { getCsrfToken, logout, getDestination } from "../../api/auth";
+import { getCsrfToken, getDestination } from "../../api/auth";
 
 import { UserData, AlertSeverity, DataItem } from "../../components/type";
 // import { rows } from "@/app/types";
@@ -17,7 +17,7 @@ const edit = () => {
     tags: [],
     address: "",
     thumbnail: '',
-    virtual_tour: '',
+    virtual_tour: [],
   });
   const [destination, setDestination] = useState<DataItem[]>([]);
   const params = new URLSearchParams(window.location.search);
@@ -35,9 +35,7 @@ const edit = () => {
     open: false,
     Transition: Fade,  // Ensure `Fade` is a valid transition component
   });
-
-  const isTab = useMediaQuery("(max-width:1380px)");
-  const isMobile = useMediaQuery("(max-width:820px)");
+ 
   const [open, setOpen] = useState<boolean>(false);
 
   const openExternalPage = ({ val, targ }: { val: string, targ: '_blank' | '_self' }) => {
@@ -65,7 +63,7 @@ const edit = () => {
       tags: foundItem?.tags || [],
       address: foundItem?.address || "",
       thumbnail: foundItem?.thumbnail || '',
-      virtual_tour: foundItem?.virtual_tour || '',
+      virtual_tour: foundItem?.virtual_tour || [],
     });
     console.log(foundItem);
   }, [destination]); // This will run when userData changes 

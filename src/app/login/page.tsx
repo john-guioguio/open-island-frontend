@@ -1,9 +1,9 @@
 "use client";
-import { Alert, Box, Button, Fade, Grid2, Snackbar, Typography, useMediaQuery } from "@mui/material"; 
+import { Alert, Box, Fade, Snackbar } from "@mui/material"; 
 import Login_CMS from "./login_cmpnts";
 import { useEffect, useState } from "react";
 import { TransitionProps } from '@mui/material/transitions';
-import { getCsrfToken, logout } from "../api/auth"; 
+import { getCsrfToken } from "../api/auth"; 
 import Cookies from 'js-cookie';
 type AlertSeverity = "error" | "warning" | "info" | "success"; // ✅ Define the type 
 
@@ -30,12 +30,7 @@ const LoginCMS = () => {
     Transition: Fade,  // Ensure `Fade` is a valid transition component
   });
 
-  const isTab = useMediaQuery("(max-width:1380px)");
-  const isMobile = useMediaQuery("(max-width:820px)");
-  const [open, setOpen] = useState<boolean>(false);
-  const onClickLogo = () => {
-    location.reload();
-  }
+  const [open, setOpen] = useState<boolean>(false); 
   const openExternalPage = ({ val, targ }: { val: string, targ: '_blank' | '_self' }) => {
     window.open(val, targ); // Open in new tab
   };

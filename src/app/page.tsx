@@ -1,9 +1,9 @@
 'use client';
-import { Alert, Box, Button, Fade, Grid2, Snackbar, Typography, useMediaQuery } from "@mui/material"; 
+import { Alert, Box, Fade, Snackbar, useMediaQuery } from "@mui/material"; 
 import CMS_Dashboard from "./dashboard";
 import { useEffect, useState } from "react";
 import { TransitionProps } from '@mui/material/transitions';
-import { getCsrfToken, getUserLogin, logout } from "./api/auth"; 
+import { getCsrfToken } from "./api/auth"; 
 import { getDestination } from "./api/auth";
 import React from "react";
 import type { TabType, UserData, AlertSeverity, DataItem } from "./components/type";
@@ -24,7 +24,7 @@ const dashboard_CMS = () => {
     tags: [],
     address: "",
     thumbnail: '',
-    virtual_tour: '',
+    virtual_tour: [],
   });
   const [alertServerity, setAlertServerity] = useState<AlertSeverity>('warning');
   const [stateTrans] = useState<{

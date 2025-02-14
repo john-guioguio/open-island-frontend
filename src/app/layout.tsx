@@ -4,7 +4,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 import landingPageIMG from "../Images/landingpageBG.png"; // Import your background image
 import LogoImg from "../Images/logo.png"; // Import your background image 
-import { getCsrfToken, getUserLogin, logout } from './api/auth';
+import { getCsrfToken, logout } from './api/auth';
 import './index.css';
 import { UserData } from './components/type';
 import { useEffect, useState } from 'react';
