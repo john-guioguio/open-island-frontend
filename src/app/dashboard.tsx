@@ -35,7 +35,7 @@ import type { DataItem } from './components/type';
 import { TransitionProps } from '@mui/material/transitions';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import DeleteDialog from './components/DeleteDialog';
-import axios from 'axios';
+import axiosClient from '@/lib/axiosClient';
 
 import Cookies from 'js-cookie';
 type TabType = "SignUp" | "Login" | "Dashboard" | "CMS" | "Destination" | "ForgotPassword"; // ✅ Define the type
@@ -153,7 +153,7 @@ export default function CustomPaginationActionsTable({ rows,
     try {
       // Make the request with Axios, fetching the image as a Blob
       const allCookies = Cookies.get();
-      const response = await axios.get("https://api.openisland.ph/download-image/" + imageUrl + "/" + filename, {
+      const response = await axiosClient.get("/" + imageUrl + "/" + filename, {
         headers: {
           'X-XSRF-TOKEN': allCookies['XSRF-TOKEN'],
         }, withCredentials: true,

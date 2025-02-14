@@ -49,7 +49,7 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
 
   const [formData, setFormData] = useState<DataItem>(dataItem);
   useEffect(() => {
-    if (dataItem.thumbnail) setPreviewThumbnail((process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000") + `/storage/${dataItem.thumbnail}`);
+    if (dataItem.thumbnail) setPreviewThumbnail((process.env.NEXT_PUBLIC_API_URL || "https://openisland.ph") + `/storage/${dataItem.thumbnail}`);
 
     if (dataItem.virtual_tour) setPreviewVirtualTour(dataItem.virtual_tour);
 
