@@ -18,9 +18,9 @@ export default function RootLayout({
 
   const [userData, setUserData] = useState<UserData | null>(null);
   const onClickLogo = () => { 
-    location.reload();
+    window.open(window.location.hostname, '_self');
     if(userData){
-      
+
     }
   }
   const isTab = useMediaQuery("(max-width:1380px)");

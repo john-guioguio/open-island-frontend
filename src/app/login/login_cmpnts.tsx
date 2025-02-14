@@ -5,11 +5,12 @@ import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 
+import { useRouter } from "next/navigation";
 import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
 import { Box, Checkbox, FormControlLabel, Grid2, Link, TextField, useMediaQuery } from '@mui/material';
 import { Fragment, useEffect, useState, ChangeEvent } from 'react';
-import {  loginUser } from '../api/auth';
+import { loginUser } from '../api/auth';
 
 type AlertSeverity = "error" | "warning" | "info" | "success"; // ✅ Define the type
 type TabType = "SignUp" | "Login" | "Dashboard" | "CMS" | "Destination" | "ForgotPassword"; // ✅ Define the type
@@ -37,7 +38,7 @@ interface BootstrapDialogProps extends DialogProps {
     isMobile?: boolean;
     isTab?: boolean;
 }
-const BootstrapDialog = styled(({  ...props }: BootstrapDialogProps) => (
+const BootstrapDialog = styled(({ ...props }: BootstrapDialogProps) => (
     <Dialog {...props} />
 ))(({ theme, isMobile, isTab }) => ({
     "& .MuiDialogContent-root": {
@@ -57,14 +58,24 @@ export default function Login({ setPageTab, prev_pageTab, setResultMSG, setOpen,
     const [checked, setChecked] = useState<boolean>(false); // Track the "Remember Me" checkbox state
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+
+    const router = useRouter();
     const isTab = useMediaQuery("(max-width:1380px)");
     const isMobile = useMediaQuery("(max-width:720px)");
     const openExternalPage = ({ val, targ }: { val: string, targ: '_blank' | '_self' }) => {
         window.open(val, targ); // Open in new tab
     };
     const handleClose = () => {
-        openExternalPage({ val: '/cms', targ: '_self' });
-        if(prev_pageTab){
+        if (typeof window !== "undefined") {
+            const currentHost = window.location.hostname;
+
+            if (currentHost.includes("cms.openisland.ph")) {
+                router.push("https://cms.openisland.ph/");
+            } else {
+                router.push("https://www.openisland.ph/");
+            }
+        }
+        if (prev_pageTab) {
 
         }
     };
@@ -221,7 +232,7 @@ export default function Login({ setPageTab, prev_pageTab, setResultMSG, setOpen,
                                 textAlign: 'center',
                                 cursor: 'pointer'
                             }}>
-                                Don’t have an account? <Link onClick={() => openExternalPage({ val: '/cms/signup', targ: '_self' })} sx={{ color: '#2E7AA9', textDecoration: 'none' }}>Signup</Link>
+                                Don’t have an account? <Link onClick={() => openExternalPage({ val: '/signup', targ: '_self' })} sx={{ color: '#2E7AA9', textDecoration: 'none' }}>Signup</Link>
                             </Typography>
                         </Box>
                     </DialogContent>
