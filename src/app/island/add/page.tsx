@@ -4,7 +4,7 @@ import ContentManagerSystem from "../../cms";
 import { useEffect, useState } from "react";
 import { TransitionProps } from '@mui/material/transitions';
 import { getCsrfToken, getDestination} from "../../api/auth";
-import type { UserData, DataItem } from "../../components/type";
+import type {  DataItem, LoginResponse } from "../../components/type";
 
 import Cookies from 'js-cookie';
 
@@ -27,7 +27,7 @@ const ADD = () => {
     setParams(searchParams);
   }, []);
   const id = params?.get("id");
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<LoginResponse | null>(null);
 
 
   // const [destination, setDestination] = useState<DataItem[]>([]); 

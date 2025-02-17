@@ -8,6 +8,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { getCsrfToken, logout } from "../api/auth";
 import LogoutIcon from '@mui/icons-material/Logout';
 import Cookies from 'js-cookie';
+import { LoginResponse } from "../components/type";
 type AlertSeverity = "error" | "warning" | "info" | "success"; // ✅ Define the type 
 
 type UserData = {
@@ -24,7 +25,7 @@ type UserData = {
 const LoginCMS = () => {
   const [resultMSG] = useState<string>('');
   const [alertServerity] = useState<AlertSeverity>('warning');
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<LoginResponse | null>(null);
   const [stateTrans] = useState<{
     open: boolean;
     Transition: React.ComponentType<TransitionProps & { children: React.ReactElement }>;
