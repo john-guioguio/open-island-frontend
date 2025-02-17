@@ -1,3 +1,7 @@
+export interface LoginResponse {
+  user?: UserData; // The user object might be undefined if login fails
+  message?: string; // Optional error message
+}
 
 export type DataItem = {
   id: string;

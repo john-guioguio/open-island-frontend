@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import { Box, Checkbox, FormControlLabel, Grid2, Link, TextField, useMediaQuery } from '@mui/material';
 import { Fragment, useEffect, useState, ChangeEvent } from 'react';
 import { loginUser } from '../api/auth';
+import { LoginResponse } from '../components/type';
 
 type AlertSeverity = "error" | "warning" | "info" | "success"; // ✅ Define the type
 type TabType = "SignUp" | "Login" | "Dashboard" | "CMS" | "Destination" | "ForgotPassword"; // ✅ Define the type
@@ -22,7 +23,7 @@ type login = {
     setOpen: (setOpen: boolean) => void;
     setAlertServerity: (setAlertServerity: AlertSeverity) => void;
     // user: UserData | null;
-    setUser: (setUser: UserData) => void;
+    setUser: (setUser: LoginResponse) => void;
 };
 type UserData = {
     id: number;
@@ -123,12 +124,16 @@ export default function Login({ setPageTab, prev_pageTab, setResultMSG, setOpen,
             // setPageTab('Dashboard');
             try {
                 const response = await loginUser(username, password);
+                setUser(response as LoginResponse);
+                setOpen(false);
                 if (response.user) {
-                    setUser(response.user as UserData);
                     setResultMSG('Success!');
                     setAlertServerity('success');
                     setOpen(true);
-                } else {
+                }
+                if (response.message) {
+
+                    setAlertServerity('warning');
                     setResultMSG(response.message || 'Something went wrong');
                     setOpen(true);
                 }

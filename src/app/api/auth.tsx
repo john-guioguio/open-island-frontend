@@ -1,21 +1,7 @@
 import { DataItem } from '../components/type';
 import axiosClient from "@/lib/axiosClient";
 import Cookies from 'js-cookie';
-type UserData = {
-  id: number;
-  name: string;
-  email: string;
-  email_verified_at: string | null;
-  password: string;
-  remember_token?: string;
-  created_at: string;
-  updated_at: string;
-};
-interface LoginResponse {
-  user?: UserData; // The user object might be undefined if login fails
-  message?: string; // Optional error message
-}
-
+import { LoginResponse } from '../components/type';
 // Register user
 export const registerUser = async (name: string, email: string, password: string, password_confirmation: string) => {
 
@@ -34,20 +20,20 @@ export const registerUser = async (name: string, email: string, password: string
 
 
 
-export const getUserLogin = async ({ setUserData }: { setUserData: (setUserData: UserData | null) => void }) => {
+export const getUserLogin = async ({ setUserData }: { setUserData: (setUserData: LoginResponse) => void }) => {
   try {
     const response = await axiosClient.get('/api/checkAuth', { withCredentials: true });
     if (response.data.user == false) {
 
-      setUserData(null); // Clear user data if login fails
+      setUserData(response.data.message); // Clear user data if login fails
       return;
     }
-    setUserData(response.data as UserData | null); // Update the state with user data
+    setUserData(response.data as LoginResponse); // Update the state with user data
 
-    localStorage.setItem('userData', JSON.stringify(response.data as UserData | null));
+    localStorage.setItem('userData', JSON.stringify(response.data as LoginResponse | null));
   } catch (error) {
     console.error(error);
-    setUserData(null); // Clear user data if login fails
+    setUserData(error as LoginResponse); // Clear user data if login fails
   }
 };
 
@@ -70,9 +56,8 @@ export const loginUser = async (email: string, password: string): Promise<LoginR
         withCredentials: true, // Maintain session using cookies
       }
     );
-
+    return response.data as LoginResponse; // Assuming response contains the 'user' data 
     // Return the user data if login is successful
-    return response.data as LoginResponse; // Assuming response contains the 'user' data
 
   } catch (error) {
     console.error('Error logging in user:', error);
@@ -98,7 +83,7 @@ export const getDestination = async ({ setDestination }: { setDestination: (dest
     }]);
   }
 };
-export const getCsrfToken = async ({ setUserData }: { setUserData: (setUserData: UserData | null) => void }) => {
+export const getCsrfToken = async ({ setUserData }: { setUserData: (setUserData: LoginResponse) => void }) => {
   const allCookies = Cookies.get();
 
   // Check if CSRF token exists in cookies
@@ -119,11 +104,11 @@ export const getCsrfToken = async ({ setUserData }: { setUserData: (setUserData:
   }
 };
 
-export const logout = async ({ setUserData }: { setUserData: (setUserData: UserData | null) => void }) => {
+export const logout = async ({ setUserData }: { setUserData: (setUserData: LoginResponse | null) => void }) => {
   try {
     const allCookies = Cookies.get();
     // Send the logout request to the backend
-   await axiosClient.post('/api/logout', {}, {
+    await axiosClient.post('/api/logout', {}, {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
