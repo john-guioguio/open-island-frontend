@@ -6,7 +6,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { getCsrfToken} from "../api/auth"; 
 import { getDestination } from "../api/auth";
 import React from "react";
-import type { TabType, UserData, AlertSeverity, DataItem } from "../components/type";
+import type { TabType, AlertSeverity, DataItem, LoginResponse } from "../components/type";
 // import  {  rows } from "@/app/types";
 import Cookies from 'js-cookie';
 import axios from "@/lib/axiosClient";
@@ -14,7 +14,7 @@ function Dashboard_CMS () {
   const [prev_pageTab, setPageTab] = useState<TabType>('Login');
   const [resultMSG, setResultMSG] = useState<string>('');
   const [isLoad, setLoad] = useState<boolean>(false);
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<LoginResponse | null>(null);
 
   const [selectedItem, setSelectedItem] = useState<DataItem>({
     id: "",
