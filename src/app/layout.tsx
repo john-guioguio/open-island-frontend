@@ -6,7 +6,7 @@ import landingPageIMG from "../Images/landingpageBG.png"; // Import your backgro
 import LogoImg from "../Images/logo.png"; // Import your background image 
 import { getCsrfToken, logout } from './api/auth';
 import './index.css';
-import { UserData } from './components/type';
+import { LoginResponse } from './components/type';
 import { useEffect, useState } from 'react';
 
 import Cookies from 'js-cookie';
@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
 
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<LoginResponse | null>(null);
   const onClickLogo = () => { 
     window.open(window.location.hostname, '_self');
     if(userData){
