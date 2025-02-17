@@ -1,15 +1,11 @@
 "use client"
-import { Box, Button, Grid2, Typography, useMediaQuery } from "@mui/material";
-import landingPageIMG from '../../Images/landingpageBG.png';
-import LogoImg from '../../Images/logo.png';
+import { Box, Button, Typography } from "@mui/material"; 
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import { useEffect } from "react";
 
 import React from "react";
 export default function NotFound() {
 
-    const isTab = useMediaQuery("(max-width:1380px)");
-    const isMobile = useMediaQuery("(max-width:820px)");
     const onClickLogo = () => {
         openExternalPage({ val: '/', targ: '_self' });
     };
