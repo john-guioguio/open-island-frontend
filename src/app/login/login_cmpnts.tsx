@@ -24,17 +24,7 @@ type login = {
     setAlertServerity: (setAlertServerity: AlertSeverity) => void;
     // user: UserData | null;
     setUser: (setUser: LoginResponse) => void;
-};
-type UserData = {
-    id: number;
-    name: string;
-    email: string;
-    email_verified_at: string | null;
-    password: string;
-    remember_token?: string;
-    created_at: string;
-    updated_at: string;
-};
+}; 
 interface BootstrapDialogProps extends DialogProps {
     isMobile?: boolean;
     isTab?: boolean;
