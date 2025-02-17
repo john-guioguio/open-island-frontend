@@ -10,18 +10,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import Cookies from 'js-cookie';
 import { LoginResponse } from "../components/type";
 type AlertSeverity = "error" | "warning" | "info" | "success"; // ✅ Define the type 
-
-type UserData = {
-  id: number;
-  name: string;
-  email: string;
-  email_verified_at: string | null;
-  password: string;
-  remember_token?: string;
-  created_at: string;
-  updated_at: string;
-};
-
+ 
 const LoginCMS = () => {
   const [resultMSG] = useState<string>('');
   const [alertServerity] = useState<AlertSeverity>('warning');
