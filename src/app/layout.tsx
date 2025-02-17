@@ -8,7 +8,7 @@ import { getCsrfToken, logout } from './api/auth';
 import './index.css';
 import { LoginResponse } from './components/type';
 import { useEffect, useState } from 'react';
-
+import Favicon from '../Images/openisland icon.png'
 import Cookies from 'js-cookie';
 export default function RootLayout({
   children,
@@ -17,9 +17,9 @@ export default function RootLayout({
 }) {
 
   const [userData, setUserData] = useState<LoginResponse | null>(null);
-  const onClickLogo = () => { 
+  const onClickLogo = () => {
     window.open(window.location.hostname, '_self');
-    if(userData){
+    if (userData) {
 
     }
   }
@@ -35,7 +35,7 @@ export default function RootLayout({
       if (!storedUser || !xsrfToken) {
         console.log("User not logged in, fetching CSRF token...");
 
-        await getCsrfToken({setUserData}); // ✅ CSRF token first
+        await getCsrfToken({ setUserData }); // ✅ CSRF token first
         // await getUserLogin({ setUserData }); // ✅ Then get user login data
 
         const updatedUser = localStorage.getItem("userData");
@@ -52,6 +52,10 @@ export default function RootLayout({
   }, []);  // ✅ Run only once after mount 
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" type="image/png" href={Favicon.src} />
+        <title>CMS - Open Island</title>
+      </head>
       <body>
         <Box
 
