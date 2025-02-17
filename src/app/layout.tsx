@@ -74,7 +74,7 @@ export default function RootLayout({
         <meta name="robots" content="index, follow"></meta>
         <meta property="og:title" content="CMS - Open Island"></meta>
         <meta property="og:description" content="This is a Content Manager System For Open Island"></meta>
-        <meta property="og:image" content={thumbnailList[getRandomInt(1, 8)].src}></meta>
+        <meta property="og:image" content={thumbnailList[getRandomInt(1, 7)].src}></meta>
         <meta property="og:image:width" content="1200"></meta>
         <meta property="og:image:height" content="630"></meta>
         <meta property="og:url" content="https://cms.openisland.com/dashboard"></meta>
