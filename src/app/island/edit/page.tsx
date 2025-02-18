@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { TransitionProps } from '@mui/material/transitions';
 import { getCsrfToken, getDestination } from "../../api/auth";
 
-import { DataItem, LoginResponse, VirtualTour_OBJ } from "../../components/type";
+import { DataItem, LoginResponse } from "../../components/type";
 // import { rows } from "@/app/types";
 import Cookies from 'js-cookie';
 const Edit = () => {
