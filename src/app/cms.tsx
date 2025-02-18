@@ -22,7 +22,7 @@ const CustomVirtualTour = ({ fileImage, titleHostpot, setTitleHostpot, index, de
 
   const [loading, setLoading] = useState<boolean>(true);
   return (
-    <Grid2 container key={index} spacing={1}>
+    <Grid2 container key={index} spacing={1} sx={{mt:1}}>
       <Grid2 size={2}>
         {loading ?
 
@@ -132,6 +132,9 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
         formDataToSend.append("virtual_tour_title[]", val.title);
         if (val.file instanceof File) {
           formDataToSend.append("virtual_tour_file[]", val.file);
+        }else{
+            
+          formDataToSend.append("virtual_tour_file[]", val.path);
         }
       });
     }
