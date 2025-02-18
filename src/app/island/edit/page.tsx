@@ -14,8 +14,7 @@ import l5 from '../../../Images/loading/6s_Bread 1.png';
 import l6 from '../../../Images/loading/7s_E-trycicle 1.png';
 // import { rows } from "@/app/types";
 import Cookies from 'js-cookie';
-import { randInt } from "three/src/math/MathUtils.js";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 const Edit = () => {
   const [selectedItem, setSelectedItem] = useState<DataItem>({
     id: "",
@@ -27,7 +26,7 @@ const Edit = () => {
     thumbnail: "",
     virtual_tour: []
   });
-  const loadingImage = [l1, l2, l3, l4, l5, l6];
+  const [loadingImage] = useState<StaticImageData[]>([l1, l2, l3, l4, l5, l6]);
   const [destination, setDestination] = useState<DataItem[]>([]);
   const [params, setParams] = useState<URLSearchParams | null>(null);
   useEffect(() => {
@@ -46,7 +45,7 @@ const Edit = () => {
     open: false,
     Transition: Fade,  // Ensure `Fade` is a valid transition component
   });
-const [randomIndex,setRandomIndex]=useState<number>(0);
+  const [randomIndex, setRandomIndex] = useState<number>(0);
   const [open, setOpen] = useState<boolean>(false);
 
   const openExternalPage = ({ val, targ }: { val: string, targ: '_blank' | '_self' }) => {
@@ -75,7 +74,7 @@ const [randomIndex,setRandomIndex]=useState<number>(0);
   }, [destination, id]); // This will run when userData changes  
   useEffect(() => {
     // Log previous pageTab for debugging 
- 
+
     setRandomIndex(Math.floor(Math.random() * loadingImage.length));
     const storedUserData = localStorage.getItem('userData');
     const allCookies = Cookies.get();
@@ -138,8 +137,8 @@ const [randomIndex,setRandomIndex]=useState<number>(0);
                 width={260}
                 height={250}
                 style={{
-                  width:'100%',
-                  height:'auto'
+                  width: '100%',
+                  height: 'auto'
                 }}
               >
               </Image>
