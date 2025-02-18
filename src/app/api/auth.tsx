@@ -1,4 +1,5 @@
-import { DataItem } from '../components/type';
+'use client'
+import { DataItem, VirtualTour_OBJ } from '../components/type';
 import axiosClient from "@/lib/axiosClient";
 import Cookies from 'js-cookie';
 import { LoginResponse } from '../components/type';
@@ -66,8 +67,33 @@ export const loginUser = async (email: string, password: string): Promise<LoginR
 };
 export const getDestination = async ({ setDestination }: { setDestination: (destination: DataItem[]) => void }) => {
   try {
-    const response = await axiosClient.get("/api/destinations");
-    setDestination(response.data as DataItem[]);
+    const response = await axiosClient.get("/api/destinations", { withCredentials: true });
+    const data = response.data as DataItem[];
+    
+    setDestination(data.map((item: DataItem) => {
+      // Ensure virtual_tour is an array, even if it's a string or already a valid array
+      let vt: VirtualTour_OBJ[] = [];
+    
+      if (item.virtual_tour) {
+        try {
+          // Parse virtual_tour if it's a string (in case it's a JSON string)
+          vt = Array.isArray(item.virtual_tour) ? item.virtual_tour : JSON.parse(item.virtual_tour);
+        } catch (error) {
+          console.error("Error parsing virtual_tour:", error);
+          vt = []; // Default to empty array if parsing fails
+        }
+      }
+    
+      return {
+        ...item,
+        virtual_tour: vt.map((val) => ({
+          title: val.title || '',  // Ensure the title exists
+          path: val.path || '',    // Ensure the path exists
+          file: val.file || undefined,  // Ensure file exists or set it to undefined
+        })),
+      };
+    }));
+    
   } catch (error) {
     console.error("Error fetching data:", error);
 
@@ -78,8 +104,8 @@ export const getDestination = async ({ setDestination }: { setDestination: (dest
       categories: [],
       tags: [],
       address: "",
-      thumbnail: '',
-      virtual_tour: [],
+      thumbnail:'',
+      virtual_tour:[]
     }]);
   }
 };

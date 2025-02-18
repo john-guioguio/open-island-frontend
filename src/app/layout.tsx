@@ -4,21 +4,12 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 import landingPageIMG from "../Images/landingpageBG.png"; // Import your background image
 import LogoImg from "../Images/logo.png"; // Import your background image 
-import t1 from "../Images/loading/2s_Leche_Flan 1.png"; // Import your background image 
-import t2 from "../Images/loading/3s_Snabaw 1.png"; // Import your background image 
-import t3 from "../Images/loading/4s_Taho 1.png"; // Import your background image 
-import t4 from "../Images/loading/5s_Pastry 1.png"; // Import your background image 
-import t5 from "../Images/loading/6s_Bread 1.png"; // Import your background image 
-import t6 from "../Images/loading/7s_E-trycicle 1.png"; // Import your background image 
-import t7 from "../Images/loading/8s_Jeep 1.png"; // Import your background image 
-import t8 from "../Images/loading/9s_Trycicle 1.png"; // Import your background image 
+import t1 from "../Images/loading/2s_Leche_Flan 1.png"; // Import your background image  
 import { getCsrfToken, logout } from './api/auth';
 import './index.css';
 import { LoginResponse } from './components/type';
 import { useEffect, useState } from 'react';
-import Favicon from '../Images/openisland icon.png'
-import Cookies from 'js-cookie';
-import { StaticImageData } from 'next/image';
+import Favicon from '../Images/openisland icon.png' 
 export default function RootLayout({
   children,
 }: {
@@ -38,10 +29,9 @@ export default function RootLayout({
   // ✅ Corrected Authentication Check
   useEffect(() => {
     const checkAuth = async () => {
-      const storedUser = localStorage.getItem("userData");
-      const xsrfToken = Cookies.get("XSRF-TOKEN");
+      const storedUser = localStorage.getItem("userData"); 
 
-      if (!storedUser || !xsrfToken) {
+      if (!storedUser ) {
         console.log("User not logged in, fetching CSRF token...");
 
         await getCsrfToken({ setUserData }); // ✅ CSRF token first
@@ -58,11 +48,7 @@ export default function RootLayout({
     };
 
     checkAuth();
-  }, []);  // ✅ Run only once after mount 
-  const getRandomInt = (min: number, max: number) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
-  const [thumbnailList, ] = useState<StaticImageData[]>([t1, t2, t3, t4, t5, t6, t7, t8]);
+  }, []);  // ✅ Run only once after mount  
   return (
     <html lang="en">
       <head>
@@ -74,7 +60,7 @@ export default function RootLayout({
         <meta name="robots" content="index, follow"></meta>
         <meta property="og:title" content="CMS - Open Island"></meta>
         <meta property="og:description" content="This is a Content Manager System For Open Island"></meta>
-        <meta property="og:image" content={thumbnailList[getRandomInt(1, 7)].src}></meta>
+        <meta property="og:image" content={t1.src}></meta>
         <meta property="og:image:width" content="1200"></meta>
         <meta property="og:image:height" content="630"></meta>
         <meta property="og:url" content="https://cms.openisland.com/dashboard"></meta>

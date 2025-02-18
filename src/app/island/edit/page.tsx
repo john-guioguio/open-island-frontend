@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { TransitionProps } from '@mui/material/transitions';
 import { getCsrfToken, getDestination } from "../../api/auth";
 
-import {  DataItem, LoginResponse } from "../../components/type";
+import { DataItem, LoginResponse, VirtualTour_OBJ } from "../../components/type";
 // import { rows } from "@/app/types";
 import Cookies from 'js-cookie';
 const Edit = () => {
@@ -16,8 +16,8 @@ const Edit = () => {
     categories: [],
     tags: [],
     address: "",
-    thumbnail: '',
-    virtual_tour: [],
+    thumbnail: "",
+    virtual_tour:[]
   });
   const [destination, setDestination] = useState<DataItem[]>([]);
   const [params, setParams] = useState<URLSearchParams | null>(null);
@@ -28,7 +28,6 @@ const Edit = () => {
   }, []);
   const id = params?.get("id");
   const [userData, setUserData] = useState<LoginResponse | null>(null);
-
 
   // const [destination, setDestination] = useState<DataItem[]>([]); 
   const [stateTrans] = useState<{
@@ -61,10 +60,9 @@ const Edit = () => {
       categories: foundItem?.categories || [],
       tags: foundItem?.tags || [],
       address: foundItem?.address || "",
-      thumbnail: foundItem?.thumbnail || '',
-      virtual_tour: foundItem?.virtual_tour || [],
+      virtual_tour: foundItem?.virtual_tour||[],
+      thumbnail: foundItem?.thumbnail || ""
     });
-    console.log(foundItem);
   }, [destination, id]); // This will run when userData changes  
   useEffect(() => {
     // Log previous pageTab for debugging 

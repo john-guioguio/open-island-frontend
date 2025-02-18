@@ -1,30 +1,39 @@
-
+'use client';
 
 import React, { useEffect, useState } from "react";
-import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Chip, OutlinedInput, Box, Typography, SelectChangeEvent, Grid2, Snackbar, Alert, Fade, LinearProgress,  List } from "@mui/material";
+import {
+  TextField, Button, MenuItem, Select, InputLabel, FormControl, Chip,
+  OutlinedInput, Box, Typography, SelectChangeEvent, Grid2, Snackbar, Alert, Fade, LinearProgress, List, IconButton
+} from "@mui/material";
 import { useDropzone, Accept } from "react-dropzone"; // Import react-dropzone
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { AlertSeverity, DataItem, VirtualTour_OBJ, categoriesOptions, tagsOptions } from "./components/type";
 import axios from "@/lib/axiosClient";
 import { TransitionProps } from "@mui/material/transitions";
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import Image from "next/image";
 const acceptFormats: Accept = {
   "image/jpeg": [],
   "image/png": [],
   "image/webp": [],
 };
-const CustomVirtualTour = ({ fileImage, titleHostpot, setTitleHostpot, key }: { key: string, fileImage: string, titleHostpot: string, setTitleHostpot: (val: string) => void }) => {
+const CustomVirtualTour = ({ fileImage, titleHostpot, setTitleHostpot, index, deleteSelectedVtour }: { deleteSelectedVtour: (key: number) => void, index: number, fileImage: string, titleHostpot: string, setTitleHostpot: (val: string) => void }) => {
   return (
-    <Grid2 container key={key}>
-      <Grid2 size={4}>
+    <Grid2 container key={index} spacing={1}>
+      <Grid2 size={2}>
         <Image
           src={fileImage}
           alt={fileImage}
-          style={{ maxWidth: "100%", minHeight: 300, objectFit: "cover" }}
+          width={50}
+          height={50}
+          style={{aspectRatio:'1/1', minHeight: 50, objectFit: "cover" }}
         />
       </Grid2>
-      <Grid2 size={8}>
-        <TextField id="outlined-basic" label="Outlined" variant="outlined" value={titleHostpot} onChange={(e) => setTitleHostpot(e.target.value)} />
+      <Grid2 size={7}>
+        <TextField label="Title" variant="outlined" value={titleHostpot} onChange={(e) => setTitleHostpot(e.target.value)} fullWidth />
+      </Grid2>
+      <Grid2 size={1}>
+        <IconButton aria-label="remove" size="large" color="error" sx={{ aspectRatio: '1/1', maxHeight: 50 }} onClick={() => deleteSelectedVtour(index)}><RemoveCircleIcon></RemoveCircleIcon></IconButton>
       </Grid2>
     </Grid2>
   )
@@ -35,9 +44,9 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
   const [open, setOpen] = useState<boolean>(false);
   const [onLoading, setOnloading] = useState<boolean>(false);
 
-  const [previewThumbnail, setPreviewThumbnail] = useState<string | null>(null);
-  const [previewVirtualTour, setPreviewVirtualTour] = useState<VirtualTour_OBJ[]>([]);
   const [resultMSG, setResultMSG] = useState<string>('');
+  const [thumbnail, setThumbnail] = useState<File | string | null>('');
+  const [virtualTour, setVirtualTour] = useState<VirtualTour_OBJ[] | null>([]);
   const [alertServerity, setAlertServerity] = useState<AlertSeverity>('warning');
   const [stateTrans] = useState<{
     open: boolean;
@@ -46,15 +55,7 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
     open: false,
     Transition: Fade,  // Ensure `Fade` is a valid transition component
   });
-
   const [formData, setFormData] = useState<DataItem>(dataItem);
-  useEffect(() => {
-    if (dataItem.thumbnail) setPreviewThumbnail((process.env.NEXT_PUBLIC_API_URL || "https://openisland.ph") + `/storage/${dataItem.thumbnail}`);
-
-    if (dataItem.virtual_tour) setPreviewVirtualTour(dataItem.virtual_tour);
-
-  }, [dataItem]);
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -68,65 +69,73 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
     setFormData((prev) => ({ ...prev, [field]: e.target.value as string[] }));
   };
   const handleFileChange = (acceptedFiles: File[], imageType: "thumbnail" | "virtual_tour") => {
-    const files = acceptedFiles;
-
-
-    if (files) {
+    if (acceptedFiles) {
       if (imageType === "thumbnail") {
-        setPreviewThumbnail(URL.createObjectURL(files[0]));
-        setFormData((prev) => ({
-          ...prev,
-          thumbnail: files[0],
-        }));
+        // Handle thumbnail file change
+        setThumbnail(acceptedFiles[0]);
       } else if (imageType === "virtual_tour") {
+        // Handle virtual tour file changes
         const newVirtualTours = acceptedFiles.map((file) => ({
-          title: "",
+          title: '', // You can allow users to add a title later
           path: URL.createObjectURL(file),
-          file, // Store the original File object
+          file: file, // Store the file itself
         }));
-        files.map((file) => {
 
-          setPreviewVirtualTour([...previewVirtualTour, { title: "", path: URL.createObjectURL(file), file: file }]);
-        })
-        setFormData((prev) => ({
-          ...prev,
-          virtual_tour: [...(prev.virtual_tour || []), ...newVirtualTours], // Ensure an array
-        }));
+        // Update the virtual tour state by merging the new files
+        setVirtualTour((prev) => [...(prev ?? []), ...newVirtualTours]);
       }
     }
   };
+  const deleteSelectedVtour = (index: number) => {
+    setVirtualTour((prev) => {
+      // Check if prev is null, default to an empty array if so
+      const updatedVirtualTour = (prev ?? []).filter((_, i) => i !== index);
+
+      // Set to null if the array is empty, else return the updated array
+      return updatedVirtualTour.length > 0 ? updatedVirtualTour : null;
+    });
+  };
+
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setOnloading(true);
     console.log("Form Submitted", formData);
     const formDataToSend = new FormData();
-    formDataToSend.append("id", formData.id);
-    formDataToSend.append("name", formData.name);
-    formDataToSend.append("description", formData.description);
-    formDataToSend.append("address", formData.address);
-    formDataToSend.append("categories", JSON.stringify(formData.categories));
-    formDataToSend.append("tags", JSON.stringify(formData.tags));
-    if (formData.thumbnail instanceof File) {
-      formDataToSend.append("thumbnail", formData.thumbnail); // Append file
+    formDataToSend.append("id", formData?.id);
+    formDataToSend.append("name", formData?.name);
+    formDataToSend.append("description", formData?.description);
+    formDataToSend.append("address", formData?.address);
+    formDataToSend.append("categories", JSON.stringify(formData?.categories));
+    formDataToSend.append("tags", JSON.stringify(formData?.tags));
+    if (thumbnail instanceof File) {
+      formDataToSend.append("thumbnail", thumbnail); // Append file
     } else {
       console.error("No Thumbnail");
     }
+    if (Array.isArray(virtualTour)) {
+      virtualTour.forEach((val) => {
 
-    if (formData.virtual_tour instanceof File) {
-      formDataToSend.append("virtual_tour", formData.virtual_tour); // Append file
-    } else {
-      console.error("No virtual_tour");
+        formDataToSend.append("virtual_tour_title[]", val.title);
+        if (val.file instanceof File) {
+          formDataToSend.append("virtual_tour_file[]", val.file);
+        }
+      });
     }
 
+    formDataToSend.forEach((value, key) => {
+      console.log(`${key}:`, value);
+    });
 
-    if (formData.id) {
+    if (formData?.id) {
       try {
 
         formDataToSend.forEach((value, key) => {
           console.log(`${key}:`, value);
         });
         const response = await axios.post(
-          `/api/destinations/${formData.id}`,
+          `/api/destinations/${formData?.id}`,
           formDataToSend,
           {
             headers: {
@@ -179,6 +188,7 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
 
   const { getRootProps: getVirtualTourProps, getInputProps: getVirtualTourInputProps } = useDropzone({
     accept: acceptFormats, // Can be 'undefined' to allow all files
+    maxFiles: 5,
     onDrop: (acceptedFiles) => handleFileChange(acceptedFiles, "virtual_tour"),
   });
 
@@ -191,21 +201,31 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
 
   };
 
+  useEffect(() => {
+    console.log(virtualTour);
+  }, [virtualTour]);
+  useEffect(() => {
+    setVirtualTour(formData.virtual_tour || null);
+    setThumbnail(formData.thumbnail || null); 
+    console.log(formData);
+  }, [formData]);
+  
+
 
   const openExternalPage = ({ val, targ }: { val: string, targ: '_blank' | '_self' }) => {
     window.open(val, targ); // Open in new tab
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ width: '90% ', mx: "auto", px: 6, pb: 2, boxShadow: 3, borderRadius: 2, bgcolor: 'rgba(255, 255, 255,1)', mt: 7 }}>
+    <Box component="form" onSubmit={handleSubmit} method="post" sx={{ width: '90% ', mx: "auto", px: 6, pb: 2, boxShadow: 3, borderRadius: 2, bgcolor: 'rgba(255, 255, 255,1)', mt: 7 }}>
 
       <Typography variant="h3" sx={{ pt: 3 }}>Content Management System</Typography>
       <Grid2 container spacing={3}>
         <Grid2 size={4}>
-          {formData.id && <TextField
+          {formData?.id && <TextField
             label="Destination ID"
             name="destinationID"
-            value={formData.id}
+            value={formData?.id}
             onChange={handleChange}
             hidden
             disabled
@@ -215,7 +235,7 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
           <TextField
             label="Destination Name"
             name="name"
-            value={formData.name}
+            value={formData?.name}
             onChange={handleChange}
             fullWidth
             margin="normal"
@@ -226,7 +246,7 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
           <TextField
             label="Description"
             name="description"
-            value={formData.description}
+            value={formData?.description}
             onChange={handleChange}
             fullWidth
             multiline
@@ -241,17 +261,17 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
             <InputLabel>Category</InputLabel>
             <Select
               multiple
-              value={formData.categories}
+              value={formData?.categories}
               onChange={(e) => handleSelectChange(e, "categories")}
               input={<OutlinedInput label="Category" />}
               disabled={onLoading}
             >
-              {categoriesOptions.map((category) => {
-                // console.log(category, formData.categories.includes(category));
+              {categoriesOptions?.map((category) => {
+                // console.log(category, formData?.categories.includes(category));
                 return (
                   <MenuItem key={category} value={category}
                     sx={{
-                      display: formData.categories.includes(category) ? 'none' : 'block'
+                      display: formData?.categories.includes(category) ? 'none' : 'block'
                     }}
                   >
                     {category}
@@ -261,42 +281,30 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
             </Select>
           </FormControl>
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-            {formData.categories.map((value) => (
+            {formData?.categories.map((value) => (
               <Chip key={value} label={value} disabled={onLoading} color="primary" variant="outlined" onDelete={(e) => { handleChipDelete(e, value, 'categories') }} />
             ))}
           </Box>
 
 
 
-          {/* <TextField
-            label="Complete Address"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            required
-          /> */}
-
-
-          {/* Tags Select (Multiple) */}
           <FormControl fullWidth margin="normal">
             <InputLabel>Tags</InputLabel>
             <Select
               disabled={onLoading}
               multiple
-              value={formData.tags}
+              value={formData?.tags}
               onChange={(e) => handleSelectChange(e, "tags")}
               input={<OutlinedInput label="Tags" />}
 
             >
 
-              {tagsOptions.map((tag) => {
+              {tagsOptions?.map((tag) => {
                 return (
                   <MenuItem key={tag} value={tag}
                     sx={{
-                      bgcolor: formData.tags.includes(tag) ? 'rgba(0,0,0,0.2)' : 'rgba(255, 255, 255, 1)',
-                      display: formData.tags.includes(tag) ? 'none' : 'block'
+                      bgcolor: formData?.tags.includes(tag) ? 'rgba(0,0,0,0.2)' : 'rgba(255, 255, 255, 1)',
+                      display: formData?.tags.includes(tag) ? 'none' : 'block'
                     }}  >
                     {tag}
                   </MenuItem>
@@ -306,14 +314,14 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
           </FormControl>
 
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-            {formData.tags.map((value) => (
+            {formData?.tags.map((value) => (
               <Chip key={value} label={value} color="secondary" variant="outlined" disabled={onLoading} onDelete={(e) => { handleChipDelete(e, value, 'tags') }} />
             ))}
           </Box>
           <TextField
             label="Complete Address"
             name="address"
-            value={formData.address}
+            value={formData?.address}
             onChange={handleChange}
             fullWidth
             margin="normal"
@@ -333,7 +341,7 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
               tags: [],
               address: '',
               thumbnail: '',
-              virtual_tour: null,
+              virtual_tour: []
             });
             openExternalPage({ val: '/dashboard', targ: '_self' });
           }} startIcon={<ArrowBackIcon></ArrowBackIcon>}>
@@ -358,17 +366,39 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
             <Typography variant="body1" color="textSecondary">
               Drag & Drop Thumbnail image here, or click to select
             </Typography>
-            {previewThumbnail && (
-              <Box sx={{ mt: 2, textAlign: "center" }}>
-                <Typography variant="body2">Preview of Thumbnail</Typography>
-                <Image
-                  src={previewThumbnail}
-                  alt={previewThumbnail}
-                  style={{ maxWidth: "100%", minHeight: 300, objectFit: "cover" }}
-                />
-              </Box>
-            )}
+
           </Box>
+          {thumbnail && (
+            <Box sx={{
+              mt: 2, textAlign: "center",
+              p: 1,
+              border: "2px dashed #1976d2",
+            }}>
+              <Typography variant="body2">Preview of Thumbnail</Typography>
+              {thumbnail instanceof File ? (
+
+                <Image
+                  src={URL.createObjectURL(thumbnail as File)}
+                  width={450}
+                  height={300}
+
+                  alt={formData.name}
+                  style={{ maxWidth: "100%", width: '100%', minHeight: 300, objectFit: "cover" }}
+                />
+              ) : (
+
+                <Image
+                  src={thumbnail}
+                  width={450}
+                  height={300}
+
+                  alt={thumbnail as string}
+                  style={{ maxWidth: "100%", width: '100%', minHeight: 300, objectFit: "cover" }}
+                />
+              )}
+
+            </Box>
+          )}
         </Grid2>
         <Grid2 size={4}>
 
@@ -388,27 +418,38 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
             <Typography variant="body1" color="textSecondary">
               Drag & Drop Virtual Tour  (360) image here, or click to select
             </Typography>
-            {previewVirtualTour && (
-              <Box sx={{ mt: 2, textAlign: "center" }}>
-                <Typography variant="body2">Preview of Virtual Tour</Typography>
-                <List  >
-                  {previewVirtualTour.map((item, index) =>
 
-                    <CustomVirtualTour key={item.title} fileImage={item.path} titleHostpot={formData.virtual_tour ? formData.virtual_tour[index].title : ''} setTitleHostpot={(val) => {
-                      setFormData(prev => ({
-                        ...prev,
-                        virtual_tour: prev.virtual_tour?.map((vt, i) =>
-                          i === index ? { ...vt, title: val } : vt
-                        ) || []
-                      }));
-                    }}></CustomVirtualTour>
-                  )}
-                </List>
-
-              </Box>
-            )}
 
           </Box>
+          {(virtualTour && virtualTour.length > 0) && (
+            <Box sx={{
+              mt: 2, textAlign: "center",
+              p: 1,
+              border: "2px dashed #1976d2",
+              maxHeight: '45vh', overflowY: 'auto'
+            }}>
+              <Typography variant="body2">Preview of Virtual Tour</Typography>
+              <List >
+                {Array.isArray(virtualTour) ? virtualTour.map((item, index) =>
+
+                  <CustomVirtualTour index={index} key={index} deleteSelectedVtour={deleteSelectedVtour} fileImage={item.path} titleHostpot={virtualTour ? virtualTour[index].title : ''} setTitleHostpot={(val) => {
+                    setVirtualTour(prev => {
+                      const updatedVirtualTour = (prev ?? []).map((vt, i) =>
+                        i === index ? { ...vt, title: val } : vt
+                      );
+
+                      return updatedVirtualTour.length > 0 ? updatedVirtualTour : null; // Return array or null
+                    });
+
+
+                  }}></CustomVirtualTour>
+                )
+                  : ''
+                }
+              </List>
+
+            </Box>
+          )} 
         </Grid2>
 
       </Grid2>

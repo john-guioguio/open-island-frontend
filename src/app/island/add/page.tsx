@@ -3,8 +3,8 @@ import { Alert, Box, Fade, Snackbar } from "@mui/material";
 import ContentManagerSystem from "../../cms";
 import { useEffect, useState } from "react";
 import { TransitionProps } from '@mui/material/transitions';
-import { getCsrfToken, getDestination} from "../../api/auth";
-import type {  DataItem, LoginResponse } from "../../components/type";
+import { getCsrfToken, getDestination } from "../../api/auth";
+import type { DataItem, LoginResponse } from "../../components/type";
 
 import Cookies from 'js-cookie';
 
@@ -16,8 +16,8 @@ const ADD = () => {
     categories: [],
     tags: [],
     address: "",
-    thumbnail: '',
-    virtual_tour: [],
+    thumbnail: "",
+    virtual_tour:[]
   });
   const [destination, setDestination] = useState<DataItem[]>([]);
   const [params, setParams] = useState<URLSearchParams | null>(null);
@@ -38,7 +38,7 @@ const ADD = () => {
     open: false,
     Transition: Fade,  // Ensure `Fade` is a valid transition component
   });
- 
+
   const [open, setOpen] = useState<boolean>(false);
 
   const openExternalPage = ({ val, targ }: { val: string, targ: '_blank' | '_self' }) => {
@@ -47,7 +47,7 @@ const ADD = () => {
   const handleClose = () => {
     openExternalPage({ val: '/', targ: '_self' });
     setOpen(false);
-  }; 
+  };
 
   const fetchData = async () => {
     await getDestination({ setDestination });
@@ -62,11 +62,11 @@ const ADD = () => {
       categories: foundItem?.categories || [],
       tags: foundItem?.tags || [],
       address: foundItem?.address || "",
-      thumbnail: foundItem?.thumbnail || '',
-      virtual_tour: foundItem?.virtual_tour || [],
+      thumbnail: foundItem?.thumbnail || "",
+      virtual_tour:[]
     });
     console.log(foundItem);
-  }, [destination,id]); // This will run when userData changes 
+  }, [destination, id]); // This will run when userData changes 
   useEffect(() => {
     // Log previous pageTab for debugging 
 
@@ -74,7 +74,7 @@ const ADD = () => {
   useEffect(() => {
     // Log previous pageTab for debugging 
 
-    fetchData();
+
     const storedUserData = localStorage.getItem('userData');
     const allCookies = Cookies.get();
     // console.log(allCookies['XSRF-TOKEN']);
@@ -82,10 +82,10 @@ const ADD = () => {
 
     } else {
       // If no user data, fetch CSRF token and login
-
+      fetchData();
       getCsrfToken({ setUserData });
     }
-  }, [userData]); // This will run when userData changes 
+  }, []); // This will run when userData changes 
   return (
     <><Snackbar open={open} autoHideDuration={2000} onClose={handleClose}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -93,10 +93,10 @@ const ADD = () => {
       TransitionComponent={stateTrans.Transition}
     >
       <Alert
-        onClose={handleClose} 
+        onClose={handleClose}
         variant="filled"
         sx={{ width: '100%' }}
-      > 
+      >
       </Alert>
     </Snackbar>
       <Box sx={{

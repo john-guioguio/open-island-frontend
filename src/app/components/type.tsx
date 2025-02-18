@@ -10,16 +10,16 @@ export type DataItem = {
   categories: string[];
   tags: string[];
   address: string;
-  thumbnail: File | string | null;
-  virtual_tour: VirtualTour_OBJ[] | null; // Ensure consistent type
+  thumbnail:string;
+  virtual_tour: VirtualTour_OBJ[] ;
 };
 export type VirtualTour_OBJ = {
   title: string;
   path: string;
-  file: File;
-} 
-export const categoriesOptions = ["Adventure", "Beach", "Historical", "Mountain", "Cultural", ""];
-export const tagsOptions = ["Nature", "Hiking", "Family", "Romantic", "Wildlife", ""];
+  file?: File;
+}
+export const categoriesOptions = ["Cultural and Heritage Tourism", "Nature and Eco-tourism", "Adventure Tourism", "Gastronomy", "Recreational Tourism", "Religious and Spiritual Tourism", "Accommodation"];
+export const tagsOptions = ["Adventure tourism", "Recreational tourism", "Religious and spiritual tourism", "Nature and eco-tourism", "Local activities", "Wildlife encounters", "Foodie adventure", "Hidden gems", "Luxury stays", "Short-Term Rental", "Residential accommodations"];
 
 export type AlertSeverity = "error" | "warning" | "info" | "success"; // ✅ Define the type
 export type TabType = "SignUp" | "Login" | "Dashboard" | "CMS" | "Destination" | "ForgotPassword"; // ✅ Define the type
@@ -33,4 +33,3 @@ export type UserData = {
   created_at: string;
   updated_at: string;
 };
- 
