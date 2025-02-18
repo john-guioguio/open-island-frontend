@@ -17,7 +17,7 @@ const ADD = () => {
     tags: [],
     address: "",
     thumbnail: "",
-    virtual_tour:[]
+    virtual_tour: []
   });
   const [destination, setDestination] = useState<DataItem[]>([]);
   const [params, setParams] = useState<URLSearchParams | null>(null);
@@ -63,7 +63,7 @@ const ADD = () => {
       tags: foundItem?.tags || [],
       address: foundItem?.address || "",
       thumbnail: foundItem?.thumbnail || "",
-      virtual_tour:[]
+      virtual_tour: []
     });
     console.log(foundItem);
   }, [destination, id]); // This will run when userData changes 
@@ -82,10 +82,21 @@ const ADD = () => {
 
     } else {
       // If no user data, fetch CSRF token and login
+
+      openExternalPage({ val: '/login', targ: '_self' });
       fetchData();
       getCsrfToken({ setUserData });
     }
   }, []); // This will run when userData changes 
+
+  useEffect(() => {
+    if (userData?.user) {
+
+    } else {
+      openExternalPage({ val: '/login', targ: '_self' });
+
+    }
+  }, [userData]); // This will run when userData changes 
   return (
     <><Snackbar open={open} autoHideDuration={2000} onClose={handleClose}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}

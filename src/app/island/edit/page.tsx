@@ -67,7 +67,7 @@ const Edit = () => {
   useEffect(() => {
     // Log previous pageTab for debugging 
 
-    fetchData();
+
     const storedUserData = localStorage.getItem('userData');
     const allCookies = Cookies.get();
     // console.log(allCookies['XSRF-TOKEN']);
@@ -76,7 +76,17 @@ const Edit = () => {
     } else {
       // If no user data, fetch CSRF token and login
 
+      openExternalPage({ val: '/login', targ: '_self' });
+      fetchData();
       getCsrfToken({ setUserData });
+    }
+  }, []); // This will run when userData changes 
+
+  useEffect(() => {
+    if (userData?.user) {
+
+    } else {
+      openExternalPage({ val: '/login', targ: '_self' });
     }
   }, [userData]); // This will run when userData changes 
   return (

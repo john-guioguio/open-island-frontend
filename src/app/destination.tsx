@@ -1,5 +1,5 @@
-import { Box, ImageList, ImageListItem } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import { Box } from "@mui/material";
+import React, {  useState } from "react";
 import PanoViewer from "./components/360Viewr";
 import pano1 from '../../Images/pano/8 Panorama (2).jpg';
 import Card from './components/card';
