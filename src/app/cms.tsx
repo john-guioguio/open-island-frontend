@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import {
   TextField, Button, MenuItem, Select, InputLabel, FormControl, Chip,
-  OutlinedInput, Box, Typography, SelectChangeEvent, Grid2, Snackbar, Alert, Fade, LinearProgress, List, IconButton
+  OutlinedInput, Box, Typography, SelectChangeEvent, Grid2, Snackbar, Alert, Fade, LinearProgress, List, IconButton,
+  Skeleton
 } from "@mui/material";
 import { useDropzone, Accept } from "react-dropzone"; // Import react-dropzone
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -18,15 +19,25 @@ const acceptFormats: Accept = {
   "image/webp": [],
 };
 const CustomVirtualTour = ({ fileImage, titleHostpot, setTitleHostpot, index, deleteSelectedVtour }: { deleteSelectedVtour: (key: number) => void, index: number, fileImage: string, titleHostpot: string, setTitleHostpot: (val: string) => void }) => {
+
+  const [loading, setLoading] = useState<boolean>(true);
   return (
     <Grid2 container key={index} spacing={1}>
       <Grid2 size={2}>
+        {loading ?
+
+          <Skeleton animation="wave"
+            width={50}
+            height={50} sx={{ aspectRatio: '1/1', minHeight: 50, }} />
+          : ''
+        }
         <Image
           src={fileImage}
           alt={fileImage}
           width={50}
-          height={50}
-          style={{aspectRatio:'1/1', minHeight: 50, objectFit: "cover" }}
+          height={loading ? 0 : 50}
+          onLoadingComplete={() => setLoading(false)}
+          style={{ aspectRatio: '1/1', minHeight: loading ? 0 : 50, objectFit: "cover", opacity: loading ? 0 : 1 }}
         />
       </Grid2>
       <Grid2 size={7}>
@@ -39,11 +50,12 @@ const CustomVirtualTour = ({ fileImage, titleHostpot, setTitleHostpot, index, de
   )
 }
 // type TabType = "SignUp" | "Login" | "Dashboard" | "CMS" | "Destination" | "ForgotPassword"; // ✅ Define the type
-export default function ContentManagementSystem({ dataItem, setSelectedItem }: { dataItem: DataItem; setSelectedItem: (val: DataItem) => void }) {
+export default function ContentManagementSystem({ dataItem, setSelectedItem }: { dataItem: DataItem, setSelectedItem: (val: DataItem) => void }) {
 
   const [open, setOpen] = useState<boolean>(false);
   const [onLoading, setOnloading] = useState<boolean>(false);
 
+  const [loading, setLoading] = useState<boolean>(true);
   const [resultMSG, setResultMSG] = useState<string>('');
   const [thumbnail, setThumbnail] = useState<File | string | null>('');
   const [virtualTour, setVirtualTour] = useState<VirtualTour_OBJ[] | null>([]);
@@ -206,10 +218,10 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
   }, [virtualTour]);
   useEffect(() => {
     setVirtualTour(formData.virtual_tour || null);
-    setThumbnail(formData.thumbnail || null); 
+    setThumbnail(formData.thumbnail || null);
     console.log(formData);
   }, [formData]);
-  
+
 
 
   const openExternalPage = ({ val, targ }: { val: string, targ: '_blank' | '_self' }) => {
@@ -386,15 +398,25 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
                   style={{ maxWidth: "100%", width: '100%', minHeight: 300, objectFit: "cover" }}
                 />
               ) : (
+                <>
+                  {loading ?
 
-                <Image
-                  src={thumbnail}
-                  width={450}
-                  height={300}
+                    <Skeleton animation="wave"
+                      width={450}
+                      height={300} />
+                    :
+                    ''}
 
-                  alt={thumbnail as string}
-                  style={{ maxWidth: "100%", width: '100%', minHeight: 300, objectFit: "cover" }}
-                />
+                  <Image
+                    src={thumbnail}
+                    width={450}
+                    height={loading ? 0 : 300}
+                    onLoadingComplete={() => setLoading(false)}
+                    alt={thumbnail as string}
+                    style={{ maxWidth: "100%", width: '100%', minHeight: loading ? 0 : 300, objectFit: "cover" }}
+                  />
+                </>
+
               )}
 
             </Box>
@@ -449,7 +471,7 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
               </List>
 
             </Box>
-          )} 
+          )}
         </Grid2>
 
       </Grid2>

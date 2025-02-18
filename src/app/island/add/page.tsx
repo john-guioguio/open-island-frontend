@@ -80,22 +80,17 @@ const ADD = () => {
     // console.log(allCookies['XSRF-TOKEN']);
     if (storedUserData && allCookies['XSRF-TOKEN']) {
 
+      fetchData();
     } else {
       // If no user data, fetch CSRF token and login
 
       openExternalPage({ val: '/login', targ: '_self' });
-      fetchData();
       getCsrfToken({ setUserData });
     }
   }, []); // This will run when userData changes 
 
   useEffect(() => {
-    if (userData?.user) {
-
-    } else {
-      openExternalPage({ val: '/login', targ: '_self' });
-
-    }
+    //
   }, [userData]); // This will run when userData changes 
   return (
     <><Snackbar open={open} autoHideDuration={2000} onClose={handleClose}
