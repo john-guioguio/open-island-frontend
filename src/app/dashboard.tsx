@@ -245,7 +245,7 @@ export default function CustomPaginationActionsTable({ rows,
         </FormControl>
 
         <Button variant='outlined' sx={{ mx: 1, minWidth: 150 }} startIcon={<AddLocationAltIcon />} onClick={() =>
-          openExternalPage({ val: '/island/add', targ: '_self' })}>Add Island</Button>
+          openExternalPage({ val: '/island/add', targ: '_self' })}>Add Destination</Button>
       </Box>
 
       <TableContainer component={Paper}>
