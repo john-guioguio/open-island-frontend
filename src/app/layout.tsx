@@ -1,5 +1,5 @@
 'use client'
-import { Box, Button, Grid2 } from '@mui/material';
+import { Box, Button, Grid2, useMediaQuery } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 import landingPageIMG from "../Images/landingpageBG.png"; // Import your background image

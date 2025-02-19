@@ -22,13 +22,13 @@ const CustomVirtualTour = ({ fileImage, titleHostpot, setTitleHostpot, index, de
 
   const [loading, setLoading] = useState<boolean>(true);
   return (
-    <Grid2 container key={index} spacing={1} sx={{mt:1}}>
+    <Grid2 container key={index} spacing={1} sx={{ mt: 1 }}>
       <Grid2 size={2}>
         {loading ?
 
           <Skeleton animation="wave"
             width={50}
-            height={50} sx={{ aspectRatio: '1/1', minHeight: 50,maxWidth: "100%", }} />
+            height={50} sx={{ aspectRatio: '1/1', minHeight: 50, maxWidth: "100%", }} />
           : ''
         }
         <Image
@@ -57,7 +57,7 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [resultMSG, setResultMSG] = useState<string>('');
-  const [thumbnail, setThumbnail] = useState<File| string | null>('');
+  const [thumbnail, setThumbnail] = useState<File | string | null>('');
   const [virtualTour, setVirtualTour] = useState<VirtualTour_OBJ[] | null>([]);
   const [alertServerity, setAlertServerity] = useState<AlertSeverity>('warning');
   const [stateTrans] = useState<{
@@ -84,7 +84,7 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
     if (acceptedFiles) {
       if (imageType === "thumbnail") {
         // Handle thumbnail file change
-        setThumbnail(URL.createObjectURL(acceptedFiles[0] as File));
+        setThumbnail(acceptedFiles[0]);
       } else if (imageType === "virtual_tour") {
         // Handle virtual tour file changes
         const newVirtualTours = acceptedFiles.map((file) => ({
@@ -132,8 +132,8 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
         formDataToSend.append("virtual_tour_title[]", val.title);
         if (val.file instanceof File) {
           formDataToSend.append("virtual_tour_file[]", val.file);
-        }else{
-            
+        } else {
+
           formDataToSend.append("virtual_tour_file[]", val.path);
         }
       });
@@ -220,12 +220,12 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
     // console.log(virtualTour);
   }, [virtualTour]);
   useEffect(() => {
-    setVirtualTour(formData.virtual_tour || null);  
+    setVirtualTour(formData.virtual_tour || null);
   }, [formData.virtual_tour]);
 
 
-  useEffect(() => { 
-    setThumbnail(formData.thumbnail || null); 
+  useEffect(() => {
+    setThumbnail(formData.thumbnail || null);
   }, [formData.thumbnail]);
 
   const openExternalPage = ({ val, targ }: { val: string, targ: '_blank' | '_self' }) => {
@@ -233,10 +233,10 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} method="post" sx={{ width: '90% ', mx: "auto",  pb: 2, boxShadow: 3, borderRadius: 2, bgcolor: 'rgba(255, 255, 255,1)', mt: 7 }}>
+    <Box component="form" onSubmit={handleSubmit} method="post" sx={{ width: '90% ', mx: "auto", pb: 2, boxShadow: 3, borderRadius: 2, bgcolor: 'rgba(255, 255, 255,1)', mt: 7 }}>
 
       <Typography variant="h3" sx={{ pt: 3 }}>Content Management System</Typography>
-      <Grid2 container spacing={3} sx={{px:3}}>
+      <Grid2 container spacing={3} sx={{ px: 3 }}>
         <Grid2 size={4}>
           {formData?.id && <TextField
             label="Destination ID"
@@ -391,25 +391,38 @@ export default function ContentManagementSystem({ dataItem, setSelectedItem }: {
               border: "2px dashed #1976d2",
             }}>
               <Typography variant="body2">Preview of Thumbnail</Typography>
+              {loading ?
+
+                <Skeleton animation="wave"
+                  width={450}
+                  height={300}
+
+                  sx={{ maxWidth: "100%", width: '100%' }} />
+                :
+                ''}
+              {thumbnail instanceof File ?
+                <Image
+                  src={URL.createObjectURL(thumbnail as File)}
+                  width={450}
+                  height={loading ? 0 : 300}
+                  onLoadingComplete={() => setLoading(false)}
+                  alt={"thumbnail"}
+                  style={{ maxWidth: "100%", width: '100%', minHeight: loading ? 0 : 300, objectFit: "cover" }}
+                />
+                :
+                <Image
+                src={thumbnail as string}
+                width={450}
+                height={loading ? 0 : 300}
+                onLoadingComplete={() => setLoading(false)}
+                alt={thumbnail as string}
+                style={{ maxWidth: "100%", width: '100%', minHeight: loading ? 0 : 300, objectFit: "cover" }}
+              />
+            }
+
+
+
               
-                  {loading ?
-
-                    <Skeleton animation="wave"
-                      width={450}
-                      height={300} 
-                      
-                    sx={{maxWidth: "100%",width:'100%'}}/>
-                    :
-                    ''}
-
-                  <Image
-                    src={thumbnail as string}
-                    width={450}
-                    height={loading ? 0 : 300}
-                    onLoadingComplete={() => setLoading(false)}
-                    alt={thumbnail as string}
-                    style={{ maxWidth: "100%", width: '100%', minHeight: loading ? 0 : 300, objectFit: "cover" }}
-                  /> 
 
             </Box>
           )}

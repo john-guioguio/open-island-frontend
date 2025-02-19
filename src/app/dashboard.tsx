@@ -34,7 +34,8 @@ import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import type { DataItem, VirtualTour_OBJ } from './components/type';
 import { TransitionProps } from '@mui/material/transitions';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import DeleteDialog from './components/DeleteDialog'; 
+import DeleteDialog from './components/DeleteDialog';
+import axiosClient from '@/lib/axiosClient';
 
 import Cookies from 'js-cookie';
 import axios from 'axios';
@@ -245,7 +246,7 @@ export default function CustomPaginationActionsTable({ rows,
         </FormControl>
 
         <Button variant='outlined' sx={{ mx: 1, minWidth: 150 }} startIcon={<AddLocationAltIcon />} onClick={() =>
-          openExternalPage({ val: '/island/add', targ: '_self' })}>Add Destination</Button>
+          openExternalPage({ val: '/island/add', targ: '_self' })}>Add Island</Button>
       </Box>
 
       <TableContainer component={Paper}>
