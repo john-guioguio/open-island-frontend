@@ -20,6 +20,21 @@ export const registerUser = async (name: string, email: string, password: string
 };
 
 
+// export const fetchImage = async (fileName: string): Promise<string | null> => {
+//   try {
+//     const response = await fetch(`/api/get-presigned-url?file=${fileName}`);
+//     const data = await response.json();
+
+//     if (data.url) {
+//       return data.url; // Use this URL in <img src={imageUrl} />
+//     }
+//     return null;
+//   } catch (error) {
+//     console.error("Error fetching image URL:", error);
+//     return null;
+//   }
+// };
+
 
 export const getUserLogin = async ({ setUserData }: { setUserData: (setUserData: LoginResponse) => void }) => {
   try {
@@ -69,11 +84,11 @@ export const getDestination = async ({ setDestination }: { setDestination: (dest
   try {
     const response = await axiosClient.get("/api/destinations", { withCredentials: true });
     const data = response.data as DataItem[];
-    
+
     setDestination(data.map((item: DataItem) => {
       // Ensure virtual_tour is an array, even if it's a string or already a valid array
       let vt: VirtualTour_OBJ[] = [];
-    
+
       if (item.virtual_tour) {
         try {
           // Parse virtual_tour if it's a string (in case it's a JSON string)
@@ -83,7 +98,7 @@ export const getDestination = async ({ setDestination }: { setDestination: (dest
           vt = []; // Default to empty array if parsing fails
         }
       }
-    
+
       return {
         ...item,
         virtual_tour: vt.map((val) => ({
@@ -93,7 +108,7 @@ export const getDestination = async ({ setDestination }: { setDestination: (dest
         })),
       };
     }));
-    
+
   } catch (error) {
     console.error("Error fetching data:", error);
 
@@ -104,8 +119,8 @@ export const getDestination = async ({ setDestination }: { setDestination: (dest
       categories: [],
       tags: [],
       address: "",
-      thumbnail:'',
-      virtual_tour:[]
+      thumbnail: '',
+      virtual_tour: []
     }]);
   }
 };

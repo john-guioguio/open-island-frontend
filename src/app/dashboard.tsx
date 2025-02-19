@@ -31,13 +31,14 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import { Delete } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
-import type { DataItem } from './components/type';
+import type { DataItem, VirtualTour_OBJ } from './components/type';
 import { TransitionProps } from '@mui/material/transitions';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import DeleteDialog from './components/DeleteDialog';
 import axiosClient from '@/lib/axiosClient';
 
 import Cookies from 'js-cookie';
+import axios from 'axios';
 type TabType = "SignUp" | "Login" | "Dashboard" | "CMS" | "Destination" | "ForgotPassword"; // ✅ Define the type
 interface TablePaginationActionsProps {
   count: number;
@@ -65,7 +66,7 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
   const handleLastPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
- 
+
   return (
     <Box sx={{ flexShrink: 0, ml: 2.5, }}>
       <IconButton onClick={handleFirstPageButtonClick} disabled={page === 0} aria-label="first page">
@@ -93,8 +94,8 @@ export default function CustomPaginationActionsTable({ rows,
   const [tagFilter, setTagFilter] = React.useState('');
   const [open, setOpen] = React.useState<boolean>(false);
 
- 
-  const [selectedDeleteID, setSelectedDeleteID] = React.useState<string>(''); 
+
+  const [selectedDeleteID, setSelectedDeleteID] = React.useState<string>('');
   const [stateTrans] = React.useState<{
     open: boolean;
     Transition: React.ComponentType<TransitionProps & { children: React.ReactElement }>;
@@ -150,10 +151,11 @@ export default function CustomPaginationActionsTable({ rows,
   };
 
   const downloadImage = async (imageUrl: string, filename: string) => {
+    // console.log(imageUrl );
     try {
       // Make the request with Axios, fetching the image as a Blob
       const allCookies = Cookies.get();
-      const response = await axiosClient.get("/" + imageUrl + "/" + filename, {
+      const response = await axios.get(imageUrl, {
         headers: {
           'X-XSRF-TOKEN': allCookies['XSRF-TOKEN'],
         }, withCredentials: true,
@@ -175,6 +177,50 @@ export default function CustomPaginationActionsTable({ rows,
       console.error("Error downloading image:", error);
     }
   };
+
+  const downloadMultipleImage = async (imageUrls: VirtualTour_OBJ[], baseFilename: string) => {
+    try {
+      if (!Array.isArray(imageUrls) || imageUrls.length === 0) {
+        console.error("No images to download.");
+        return;
+      }
+
+      const allCookies = Cookies.get(); // Move outside loop
+
+      for (const [index, element] of imageUrls.entries()) {
+        try {
+          // Fetch the image as a Blob
+          const response = await axios.get(element.path, {
+            headers: {
+              'X-XSRF-TOKEN': allCookies['XSRF-TOKEN'],
+            },
+            withCredentials: true,
+            responseType: "blob",
+          });
+
+          // Create a Blob from the response data
+          const blob = new Blob([response.data]);
+
+          // Generate a unique filename for each image
+          const uniqueFilename = `${baseFilename}_${element.title}_Virtual_tour_${index + 1}.jpg`;
+
+          // Create a temporary link element to download the file
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = uniqueFilename;
+          document.body.appendChild(link);
+          link.click(); // Trigger download
+          document.body.removeChild(link); // Clean up
+
+        } catch (error) {
+          console.error(`Error downloading image: ${element.path}`, error);
+        }
+      }
+    } catch (error) {
+      console.error("Error in downloadMultipleImage function:", error);
+    }
+  };
+
   return (
     <Box sx={{ bgcolor: 'white' }}>
       {/* Search and Filter Controls */}
@@ -240,18 +286,24 @@ export default function CustomPaginationActionsTable({ rows,
                   {row.address}
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="center">
-                  <Button startIcon={<FileDownloadIcon></FileDownloadIcon>} onClick={() => downloadImage(row.thumbnail?.toString() || "", row.name + '_thumbnail.jpg')}  >Download</Button>
+                  <Button sx={{ fontSize: "0.8vw" }} startIcon={<FileDownloadIcon sx={{ fontSize: "0.8vw" }}></FileDownloadIcon>} onClick={() => downloadImage(row.thumbnail?.toString() || "", row.name + '_thumbnail.jpg')}  >Download</Button>
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="center">
-                  <Button startIcon={<FileDownloadIcon></FileDownloadIcon>} onClick={() => downloadImage(row.virtual_tour?.toString() || "", row.name + '_Virtual_tour.jpg')}>Download</Button>
+                  <Button sx={{ fontSize: "0.8vw" }} startIcon={<FileDownloadIcon sx={{ fontSize: "0.8vw" }}></FileDownloadIcon>} onClick={() => downloadMultipleImage(row.virtual_tour, row.name )}>Download</Button>
                 </TableCell>
                 <TableCell style={{ width: 220 }} align="right">
                   <Grid2 container spacing={2}>
                     <Grid2 size={6}>
-                      <Button variant='outlined' sx={{ mx: 1, minWidth: 100 }} color="error" startIcon={<Delete />} onClick={() => { setSelectedDeleteID(row.id); handleClickOpen() }}>Delete</Button>
+                      <Button variant='outlined' fullWidth sx={{
+                        fontSize: "0.8vw", // Scale font size responsively 
+                        mx: 1,
+                      }} color="error" startIcon={<Delete sx={{ fontSize: "0.8vw" }} />} onClick={() => { setSelectedDeleteID(row.id); handleClickOpen() }}>Delete</Button>
                     </Grid2>
                     <Grid2 size={6}>
-                      <Button variant='outlined' sx={{ mx: 1, minWidth: 100 }} startIcon={<EditIcon />} onClick={() => { setSelectedItem(row); setPageTab('CMS'); openExternalPage({ val: "/island/edit?id=" + row.id, targ: '_self' }) }}>Edit</Button>
+                      <Button variant='outlined' fullWidth sx={{
+                        fontSize: "0.8vw", // Scale font size responsively 
+                        mx: 1,
+                      }} startIcon={<EditIcon sx={{ fontSize: "0.8vw" }} />} onClick={() => { setSelectedItem(row); setPageTab('CMS'); openExternalPage({ val: "/island/edit?id=" + row.id, targ: '_self' }) }}>Edit</Button>
                     </Grid2>
                   </Grid2>
                 </TableCell>
@@ -292,10 +344,10 @@ export default function CustomPaginationActionsTable({ rows,
         TransitionComponent={stateTrans.Transition}
       >
         <Alert
-          onClose={handleClose} 
+          onClose={handleClose}
           variant="filled"
           sx={{ width: '100%' }}
-        > 
+        >
         </Alert>
       </Snackbar>
     </Box >

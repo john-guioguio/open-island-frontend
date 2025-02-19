@@ -1,14 +1,13 @@
 "use client";
 import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
-import Dialog, { DialogProps } from '@mui/material/Dialog';
+import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 
 import { useRouter } from "next/navigation";
 import DialogActions from '@mui/material/DialogActions';
 import Typography from '@mui/material/Typography';
-import { Box, Checkbox, FormControlLabel, Grid2, Link, TextField, useMediaQuery } from '@mui/material';
+import { Box, Checkbox, FormControlLabel, Grid2, Link, TextField } from '@mui/material';
 import { Fragment, useEffect, useState, ChangeEvent } from 'react';
 import { loginUser } from '../api/auth';
 import { LoginResponse } from '../components/type';
@@ -24,35 +23,14 @@ type login = {
     setAlertServerity: (setAlertServerity: AlertSeverity) => void;
     // user: UserData | null;
     setUser: (setUser: LoginResponse) => void;
-}; 
-interface BootstrapDialogProps extends DialogProps {
-    isMobile?: boolean;
-    isTab?: boolean;
-}
-const BootstrapDialog = styled(({ ...props }: BootstrapDialogProps) => (
-    <Dialog {...props} />
-))(({ theme, isMobile, isTab }) => ({
-    "& .MuiDialogContent-root": {
-        padding: theme.spacing(2),
-    },
-    "& .MuiDialogActions-root": {
-        padding: theme.spacing(1),
-    },
-    "& .MuiDialog-paper": {
-        borderRadius: 15, // Apply border-radius to the dialog
-        width: "60%",
-        maxWidth: isMobile ? "80%" : isTab ? "50%" : "30%",
-        fontFamily: "Inter",
-    },
-}));
+};
+
 export default function Login({ setPageTab, prev_pageTab, setResultMSG, setOpen, setAlertServerity, setUser }: login) {
     const [checked, setChecked] = useState<boolean>(false); // Track the "Remember Me" checkbox state
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    const router = useRouter();
-    const isTab = useMediaQuery("(max-width:1380px)");
-    const isMobile = useMediaQuery("(max-width:720px)");
+    const router = useRouter(); 
     const openExternalPage = ({ val, targ }: { val: string, targ: '_blank' | '_self' }) => {
         window.open(val, targ); // Open in new tab
     };
@@ -142,9 +120,9 @@ export default function Login({ setPageTab, prev_pageTab, setResultMSG, setOpen,
         <>
             <Fragment>
 
-                <BootstrapDialog
-                    isMobile={isMobile}
-                    isTab={isTab}
+                <Dialog
+                    fullWidth={true}
+                    maxWidth={'sm'}
                     onClose={handleClose}
                     aria-labelledby="customized-dialog-title"
                     open={true}
@@ -233,7 +211,7 @@ export default function Login({ setPageTab, prev_pageTab, setResultMSG, setOpen,
                     </DialogContent>
                     <DialogActions>
                     </DialogActions>
-                </BootstrapDialog>
+                </Dialog>
 
             </Fragment>
 

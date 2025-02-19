@@ -9,7 +9,7 @@ import { getCsrfToken, logout } from './api/auth';
 import './index.css';
 import { LoginResponse } from './components/type';
 import { useEffect, useState } from 'react';
-import Favicon from '../Images/openisland icon.png' 
+import Favicon from '../Images/openisland icon.png'
 export default function RootLayout({
   children,
 }: {
@@ -22,16 +22,14 @@ export default function RootLayout({
     if (userData) {
 
     }
-  }
-  const isTab = useMediaQuery("(max-width:1380px)");
-  const isMobile = useMediaQuery("(max-width:820px)");
+  } 
 
   // ✅ Corrected Authentication Check
   useEffect(() => {
     const checkAuth = async () => {
-      const storedUser = localStorage.getItem("userData"); 
+      const storedUser = localStorage.getItem("userData");
 
-      if (!storedUser ) {
+      if (!storedUser) {
         console.log("User not logged in, fetching CSRF token...");
 
         await getCsrfToken({ setUserData }); // ✅ CSRF token first
@@ -90,7 +88,7 @@ export default function RootLayout({
             overflowY: 'auto'
           }}>
             <Grid2 container spacing={2} sx={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0))', width: '100%', position: 'sticky', zIndex: 999 }}>
-              <Grid2 size={isMobile ? 8 : isTab ? 5 : 4}
+              <Grid2 size={4}
                 sx={{
                   fontSize: "2rem", // Example of custom styling
                   fontFamily: "inter",
@@ -99,22 +97,25 @@ export default function RootLayout({
                   padding: 2,
                 }}
               >
-                <Box component={'img'} sx={{ width: '50%' }} src={LogoImg.src} onClick={onClickLogo}></Box>
+                <Box component={'img'} sx={{ width: '100%' }} src={LogoImg.src} onClick={onClickLogo}></Box>
               </Grid2>
-              <Grid2 size={6}>
+              <Grid2 size={5}>
               </Grid2>
-              <Grid2 size={1}>
-                <Button variant="text" sx={{
-                  p: 5, color: 'white',
-                  transition: 'all 0.3s ease', // Smooth transition for all effects 
-                  bgcolor: '',
-                  '&:hover': {
-                    color: 'rgba(168, 168, 168, 0.68)',
-                    bgcolor: 'rgba(168, 168, 168, 0)',
-                  },
-                }} startIcon={<LogoutIcon> </LogoutIcon>}
-                  onClick={() => logout({ setUserData })}
-                >Logout</Button>
+              <Grid2 size={3}>
+                {userData?.user &&
+                  <Button variant="text" fullWidth sx={{
+                    p: 5, color: 'white',
+                    transition: 'all 0.3s ease', // Smooth transition for all effects 
+                    bgcolor: '',
+                    '&:hover': {
+                      color: 'rgba(168, 168, 168, 0.68)',
+                      bgcolor: 'rgba(168, 168, 168, 0)',
+                    },
+                  }} startIcon={<LogoutIcon> </LogoutIcon>}
+                    onClick={() => logout({ setUserData })}
+                  >Logout</Button>
+                }
+
               </Grid2>
             </Grid2>
           </Box>
