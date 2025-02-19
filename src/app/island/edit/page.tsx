@@ -88,7 +88,7 @@ const Edit = () => {
       getCsrfToken({ setUserData });
       openExternalPage({ val: '/login', targ: '_self' });
     }
-  }, []); // This will run when userData changes 
+  }, [loadingImage.length]); // This will run when userData changes 
   useEffect(() => {
     //
   }, [userData]); // This will run when userData changes 

@@ -34,8 +34,7 @@ import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import type { DataItem, VirtualTour_OBJ } from './components/type';
 import { TransitionProps } from '@mui/material/transitions';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import DeleteDialog from './components/DeleteDialog';
-import axiosClient from '@/lib/axiosClient';
+import DeleteDialog from './components/DeleteDialog'; 
 
 import Cookies from 'js-cookie';
 import axios from 'axios';
